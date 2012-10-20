@@ -1,4 +1,7 @@
-﻿var jsdom = require('jsdom');
+﻿var sys = require('sys');
+var stdin = process.openStdin();
+
+var jsdom = require('jsdom');
 var request = require('request');
 var url = require('url');
 
@@ -14,6 +17,19 @@ console.log('Bot running and connected to ' + channel + '...');
 var youtube;
 var save = [];
 var vastaukset;
+
+stdin.addListener('data', function(d) {
+	var cmd = d.toString().substring(0, d.length-2);
+	var say = d.toString().substring(0,3);
+	
+	if (cmd == 'down') {
+		client.say(channel, 'Shutting down for maintenance...');
+	}
+	if (say == 'say') {
+		var text = d.toString().substring(4,d.length-2);
+		client.say(channel, text);
+	}
+});
 
 client.addListener('message', function(from, to, message) {
 	
@@ -32,7 +48,7 @@ client.addListener('message', function(from, to, message) {
 			}, function(err, window){
 				var $ = window.jQuery;
 				youtube = $('title').text()
-				client.say(channel, ircLib.colors.wrap('light_red', youtube));
+				client.say(channel, ircLib.colors.wrap('cyan', youtube));
 				console.log(youtube + ' => ' +message);
 			});
 		});
@@ -57,7 +73,7 @@ client.addListener('message', function(from, to, message) {
 			if (message.length > 12) {
 				vastaukset = message.substring(12);
 			} else {
-				client.say(channel, ircLib.colors.wrap('light_red', vastaukset));
+				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset));
 			}
 		}
 	} else {
