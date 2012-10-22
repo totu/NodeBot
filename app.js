@@ -53,6 +53,27 @@ client.addListener('message', function(from, to, message) {
 			});
 		});
 	}
+	
+	//Riemurasia stuff 
+	if (message.substring(8,27) == "www.riemurasia.net/" || message.substring(7,26) == "www.riemurasia.net/" || message.substring(0,19) == "www.riemurasia.net/") {
+		if (message.substring(0,3) == "www") {
+			message = "http://"+message;
+		}
+		request({uri: message}, function(err, response, body){
+			var self = this;
+			self.items = new Array();
+			if(err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
+			jsdom.env({
+				html: body,
+				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
+			}, function(err, window){
+				var $ = window.jQuery;
+				youtube = $('title').text()
+				client.say(channel, ircLib.colors.wrap('cyan', youtube + '- Riemurasia'));
+				console.log(youtube + ' => ' +message);
+			});
+		});
+	}
 
 
 	//Bot stuff
