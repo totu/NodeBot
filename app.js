@@ -1,26 +1,26 @@
-﻿var sys = require('sys');
-var stdin = process.openStdin();
+﻿var	sys = require('sys')
+,	stdin = process.openStdin()
+,	jsdom = require('jsdom')
+,	request = require('request')
+,	url = require('url')
+,	youtube
+,	save = []
+,	vastaukset;
 
-var jsdom = require('jsdom');
-var request = require('request');
-var url = require('url');
+var channel = '#kujalla'; /* <-- CHANGE THIS */
 
-var channel = '#kujalla';
-
-var ircLib = require('irc');
-var fs = require('fs');
-var client = new ircLib.Client('irc.quakenet.org', 'MorphBot', { 
-	channels: [channel], 
-});
+var	ircLib = require('irc')
+,	fs = require('fs')
+,	client = new ircLib.Client('irc.quakenet.org', /* CHANGE THIS --> */ 'MorphBot', { 
+		channels: [channel], 
+	});
 console.log('Bot running and connected to ' + channel + '...');
 
-var youtube;
-var save = [];
-var vastaukset;
+
 
 stdin.addListener('data', function(d) {
-	var cmd = d.toString().substring(0, d.length-2);
-	var say = d.toString().substring(0,3);
+	var	cmd = d.toString().substring(0, d.length-2)
+	,	say = d.toString().substring(0,3);
 	
 	if (cmd == 'down') {
 		client.say(channel, 'Shutting down for maintenance...');
@@ -41,7 +41,7 @@ client.addListener('message', function(from, to, message) {
 		request({uri: message}, function(err, response, body){
 			var self = this;
 			self.items = new Array();
-			if(err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
+			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
 			jsdom.env({
 				html: body,
 				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
