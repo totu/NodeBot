@@ -25,6 +25,9 @@ stdin.addListener('data', function(d) {
 	if (cmd == 'down') {
 		client.say(channel, 'Shutting down for maintenance...');
 	}
+	if (cmd == 'hello') {
+		client.say(channel, 'Hello again!');
+	}
 	if (say == 'say') {
 		var text = d.toString().substring(4,d.length-2);
 		client.say(channel, text);
@@ -34,7 +37,7 @@ stdin.addListener('data', function(d) {
 client.addListener('message', function(from, to, message) {
 	
 	//Youtube stuff 
-	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/") {
+	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") {
 		if (message.substring(0,3) == "www") {
 			message = "http://"+message;
 		}
