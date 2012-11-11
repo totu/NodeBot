@@ -11,7 +11,7 @@ var channel = '#kujalla'; /* <-- CHANGE THIS */
 
 var	ircLib = require('irc')
 ,	fs = require('fs')
-,	client = new ircLib.Client('irc.quakenet.org', /* CHANGE THIS --> */ 'MorphBot', { 
+,	client = new ircLib.Client('irc.quakenet.org', /* CHANGE THIS --> */ 'KujaBot', { 
 		channels: [channel], 
 	});
 console.log('Bot running and connected to ' + channel + '...');
@@ -35,6 +35,25 @@ stdin.addListener('data', function(d) {
 });
 
 client.addListener('message', function(from, to, message) {
+	//WolframAlpha stuff
+	if (message.substring(0,4) == 'wolf') {
+		var lauseke = message.substring(5);
+		var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
+		request({uri: wolfurli}, function(err, response, body){
+			var self = this;
+			self.items = new Array();
+			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
+			jsdom.env({
+				html: body,
+				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
+			}, function(err, window){
+				var $ = window.jQuery;
+				var wolfvastaus = $('plaintext').text();
+				client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus));
+				console.log(wolfvastaus + ' => ' +message);
+			});
+		});
+	}
 	
 	//Youtube stuff 
 	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") {
