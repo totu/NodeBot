@@ -45,7 +45,7 @@ client.addListener('message', function(from, to, message) {
 			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
 			jsdom.env({
 				html: body,
-				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
+				scripts: ['http://code.jquery.com/jquery-latest.min.js']
 			}, function(err, window){
 				var $ = window.jQuery;
 				var wolfvastaus = $('plaintext').text();
@@ -66,7 +66,7 @@ client.addListener('message', function(from, to, message) {
 			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
 			jsdom.env({
 				html: body,
-				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
+				scripts: ['http://code.jquery.com/jquery-latest.min.js']
 			}, function(err, window){
 				var $ = window.jQuery;
 				youtube = $('title').text()

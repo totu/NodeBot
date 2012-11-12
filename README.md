@@ -8,11 +8,18 @@ on our IRC channel.
 
 ---------------------------------
 
+Version 1.1:
+
+* Added title grabbing for Riemurasia
+* Added few experimental functions.
+
+
+
 Main functions as of version 1.0 are:
 
-1. Grabbing video titles from YouTube links and displaying them on the channel.
+* Grabbing video titles from YouTube links and displaying them on the channel.
 
-2. Giving us a simple place to store homework answers, so people can easily check
+* Giving us a simple place to store homework answers, so people can easily check
 the collective opinnion once it's formed, even if they can't get hold of anyone.
 
 ---------------------------------
@@ -22,16 +29,16 @@ Installation & configuration:
 1. You need node.js (http://nodejs.org) for this, for node.js installation prefer
    to their own documentation.
 
-2. JSDOM requires Python 2.7, so you need to install it from (http://www.python.org).   
+2. JSDOM requires Python 2.7 (NOT 3.2), so you need to install it from http://www.python.org.   
  
 3. Install IRC, Request and jsdom via npm:
-	`npm install socket.io express`
+	`npm install irc request url jsdom`
 	
 4. Copy `app.js` desired folder.
 
 5. Configure bot's basic information
-	* From 'app.js' change server, channel and botsnick to what you want.
-	* From '\node_modules\irc\lib\irc.js' you can change username, port and all the rest.
+	* From `app.js` change server, channel and botsnick to what you want.
+	* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
 
 5. Start the program.
 	`node app.js`
