@@ -29,19 +29,21 @@ Installation & configuration:
 1. You need node.js (http://nodejs.org) for this, for node.js installation prefer
    to their own documentation.
 
+   
 2. JSDOM requires Python 2.7 (NOT 3.2), so you need to install it from http://www.python.org.   
  
+ 
 3. Run npm install
-	`npm install`
-	
-4. Copy `app.js` desired folder.
+`npm install`
 
+	
 5. Configure bot's basic information
 	* From `app.js` change server, channel and bot's nick to what you want.
 	* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
 
+	
 5. Start the program.
-	`node app.js`
+`node app.js`
 
 ---------------------------------
 
