@@ -5,6 +5,7 @@
 ,	url = require('url')
 ,	youtube
 ,	save = []
+,	quotes = []
 ,	vastaukset;
 
 var channel = '#kujalla'; /* <-- CHANGE THIS */
@@ -104,7 +105,7 @@ client.addListener('message', function(from, to, message) {
 			client.say(channel,'Hi, '+from+'!');
 		}
 		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") {
-			client.say(channel, 'Available commands: !help,  !hello, !save, !open, !vastaukset');
+			client.say(channel, 'Available commands: !help,  !hello, !quote, !quote(x), !save, !open, !vastaukset');
 		}
 		if (message.substring(1,5) == "save") {
 			save.push(message.substring(6));
@@ -117,6 +118,20 @@ client.addListener('message', function(from, to, message) {
 				vastaukset = message.substring(12);
 			} else {
 				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset));
+			}
+		}
+		if (message.substring(1,6) == "quote")  {
+			if (message.length == 9) {
+				var x = parseFloat(message.substring(7,8));
+				if (x > quotes.length || isNaN(x) || x <= 0) {
+					client.say(channel, "Error :: Quote ID not found (1-"+quotes.length+")");
+				} else {
+					client.say(channel, quotes[x-1]);
+				}
+			} else if (message.length > 7) {
+				quotes.push(message.substring(7));
+			} else {
+				client.say(channel, quotes[Math.floor(Math.random()*quotes.length)]);
 			}
 		}
 	} else {

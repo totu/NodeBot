@@ -51,7 +51,7 @@ Need to submit bugs? Feature requests? Just want to comment?
 topi.tuulensuu@student.hamk.fi
 
 You can also keep tabs on me through my website:
-http://morphling.dotgeek.org/
+http://robots-and-dinosaurs.org/
 
 Copyright (c) Topi Tuulensuu 2012
 
