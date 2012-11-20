@@ -42,26 +42,6 @@ stdin.addListener('data', function(d) {
 });
 
 client.addListener('message', function(from, to, message) {
-	//WolframAlpha stuff
-	if (message.substring(0,4) == 'wolf') {
-		var lauseke = message.substring(5);
-		var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
-		request({uri: wolfurli}, function(err, response, body){
-			var self = this;
-			self.items = new Array();
-			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
-			jsdom.env({
-				html: body,
-				scripts: ['http://code.jquery.com/jquery-latest.min.js']
-			}, function(err, window){
-				var $ = window.jQuery;
-				var wolfvastaus = $('plaintext').text();
-				client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus));
-				console.log(wolfvastaus + ' => ' +message);
-			});
-		});
-	}
-	
 	//Youtube stuff 
 	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") {
 		if (message.substring(0,3) == "www") {
@@ -144,6 +124,27 @@ client.addListener('message', function(from, to, message) {
 			} else {
 				client.say(channel, quotes[Math.floor(Math.random()*quotes.length)]);
 			}
+		}
+		//WolframAlpha stuff
+		if (message.substring(1,5) == 'wolf' || message.substring(1,5) == 'calc' || message.substring(1,5) == 'math') {
+			var lauseke = message.substring(6);
+			var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
+			request({uri: wolfurli}, function(err, response, body){
+				var self = this;
+				self.items = new Array();
+				if (err && response.statusCode != 200){wolfvastaus = "Request error! You done goof'd";}
+				jsdom.env({
+					html: body,
+					scripts: ['http://code.jquery.com/jquery-latest.min.js']
+				}, function(err, window){
+					var $ = window.jQuery;
+					var wolfvastaus = $("pod[title='Result']").find( $('plaintext') ).html();
+					var deciapprox = $("pod[title='Decimal approximation']").find( $('plaintext') ).html();
+					if (wolfvastaus == null) var wolfvastaus = deciapprox;
+					client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus));
+					console.log(wolfvastaus + ' => ' +message);
+				});
+			});
 		}
 	} else {
 		fs.open('irc.log', 'a', function(e, id) {
