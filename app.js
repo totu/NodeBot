@@ -91,7 +91,7 @@ client.addListener('message', function(from, to, message) {
 			client.say(channel,'Hi, '+from+'!');
 		}
 		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") {
-			client.say(channel, 'Available commands: !help,  !hello, !quote, !quote(x), !save, !open, !vastaukset');
+			client.say(channel, 'Available commands: !help, !hello, !calc, !math, !wolf, !quote, !quote(x), !save, !open, !vastaukset');
 		}
 		if (message.substring(1,5) == "save") {
 			save.push(message.substring(6));
@@ -128,6 +128,18 @@ client.addListener('message', function(from, to, message) {
 		//WolframAlpha stuff
 		if (message.substring(1,5) == 'wolf' || message.substring(1,5) == 'calc' || message.substring(1,5) == 'math') {
 			var lauseke = message.substring(6);
+			//Fix API call URL
+			var merkki = '+';
+			var merkki2 = '%2B';
+			for (var i = 0; i < 2; i++) {
+				if (i == 1) {merrki = '/'; merkki2 = '%2F' }
+				var intIndexOfMatch = lauseke.indexOf( merkki );
+				while (intIndexOfMatch != -1){
+					lauseke = lauseke.replace( merkki, merkki2 )
+					intIndexOfMatch = lauseke.indexOf( merkki );
+				}
+			}
+			//Create the API call
 			var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
 			request({uri: wolfurli}, function(err, response, body){
 				var self = this;
