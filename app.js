@@ -1,133 +1,132 @@
-﻿var	sys = require('sys')
+﻿//Requiring dependencies & variables
+var	sys = require('sys')
 ,	stdin = process.openStdin()
 ,	jsdom = require('jsdom')
 ,	request = require('request')
 ,	url = require('url')
-,	youtube
+,	grabbedString
 ,	save = []
 ,	quotes = []
 ,	vastaukset;
 
-var channel = '#kujalla'; /* <-- CHANGE THIS */
+/* STUFF THAT YOU SHOULD CHANGE */
 
+var channel = '#kujalla';
+var botname = 'KujaBot';
+var devmode = false;
+
+/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+
+//Creating the actual IRC client part
 var	ircLib = require('irc')
-,	fs = require('fs')
-,	client = new ircLib.Client('irc.quakenet.org', /* CHANGE THIS --> */ 'KujaBot', { 
-		channels: [channel], 
-	});
+,	fs = require('fs');
+if (devmode) {channel += "2"; botname += "2";}
+var client = new ircLib.Client('irc.quakenet.org', botname, {channels: [channel],});
 console.log('Bot running and connected to ' + channel + '...');
 
 //Read settings from file
-fs.readFile('quotes.bot', function(err, data) {
-    if(!err) {
-		quotes = data.toString().split("\n");
+fs.readFile('quotes.bot', function(err, data) { //Open 'quotes.bot' file
+    if(!err) { //If no errors
+		quotes = data.toString().split("\n"); //Add the content of the file into 'quotes' array
 	}
 });
 
 //Bot stuff
-stdin.addListener('data', function(d) {
-	var	cmd = d.toString().substring(0, d.length-2)
-	,	say = d.toString().substring(0,3);
-	
-	if (cmd == 'down') {
-		client.say(channel, 'Shutting down for maintenance...');
-	}
-	if (cmd == 'hello') {
-		client.say(channel, 'Hello again!');
-	}
-	if (say == 'say') {
-		var text = d.toString().substring(4,d.length-2);
-		client.say(channel, text);
+stdin.addListener('data', function(d) {	//Adding a listener to standard input
+	var say = d.toString().substring(0,3);	//Grabbing first 3 characters
+	if (say == 'say') {	//If grabbed characters are "say"
+		var text = d.toString().substring(4,d.length-2);	//Grab rest of the string
+		client.say(channel, text);	//And say it to the IRC channel
 	}
 });
 
-client.addListener('message', function(from, to, message) {
-	//Youtube stuff 
-	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") {
-		if (message.substring(0,3) == "www") {
-			message = "http://"+message;
+client.addListener('message', function(from, to, message) { //Adding a listener for messages from the IRC channel
+	//YouTube stuff 
+	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") { //If message starts with YouTube URL
+		if (message.substring(0,3) == "www") {	//Add the missing 'http://'
+			message = "http://"+message; 
 		}
-		request({uri: message}, function(err, response, body){
-			var self = this;
-			self.items = new Array();
-			if (err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
-			jsdom.env({
-				html: body,
-				scripts: ['http://code.jquery.com/jquery-latest.min.js']
+		request({uri: message}, function(err, response, body){ 	//Request handler
+			var self = this; //Add the site to 'self' variable
+			self.items = []; //Make array out of items in self
+			if (err && response.statusCode != 200){grabbedString = "Request error! You done goof'd";} //If page doesn't return 200 (OK) code, report error.
+			jsdom.env({ 													//Enstablish jsdom environment
+				html: body,													//Include body as html
+				scripts: ['http://code.jquery.com/jquery-latest.min.js']	//Include latest jquery as script
 			}, function(err, window){
-				var $ = window.jQuery;
-				youtube = $('title').text()
-				client.say(channel, ircLib.colors.wrap('cyan', youtube));
-				console.log(youtube + ' => ' +message);
+				var $ = window.jQuery
+				grabbedString = $('title').text() //Grab site's title
+				client.say(channel, ircLib.colors.wrap('cyan', grabbedString)); //Broadcast site's title to the IRC channel with 'cyan' color
+				console.log(grabbedString + ' => ' +message);  //And log the event in console
 			});
 		});
 	}
 	
-	//Riemurasia stuff 
+	//Riemurasia stuff *** Same exact code used here as above *** FIX THIS:(Should be implemented as a function rather than repeating)
 	if (message.substring(8,27) == "www.riemurasia.net/" || message.substring(7,26) == "www.riemurasia.net/" || message.substring(0,19) == "www.riemurasia.net/") {
 		if (message.substring(0,3) == "www") {
 			message = "http://"+message;
 		}
 		request({uri: message}, function(err, response, body){
 			var self = this;
-			self.items = new Array();
-			if(err && response.statusCode != 200){youtube = "Request error! You done goof'd";}
+			self.items = []
+			if(err && response.statusCode != 200){grabbedString = "Request error! You done goof'd";}
 			jsdom.env({
 				html: body,
 				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
 			}, function(err, window){
 				var $ = window.jQuery;
-				youtube = $('title').text()
-				client.say(channel, ircLib.colors.wrap('cyan', youtube + '- Riemurasia'));
-				console.log(youtube + ' => ' +message);
+				grabbedString = $('title').text()
+				client.say(channel, ircLib.colors.wrap('cyan', grabbedString + '- Riemurasia'));
+				console.log(grabbedString + ' => ' +message);
 			});
 		});
 	}
 
 
 	//Bot stuff
-	if (message.charAt(0) == "!") {
-		if (message.substring(1,6) == "hello") {
-			client.say(channel,'Hi, '+from+'!');
+	if (message.charAt(0) == "!") { //If channel message starts with "!" => message is a command
+		if (message.substring(1,6) == "hello") { //If command is "hello"
+			client.say(channel,'Hi, '+from+'!');	//Respond with "Hi, sender"
 		}
-		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") {
-			client.say(channel, 'Available commands: !help, !hello, !calc, !math, !wolf, !quote, !quote(x), !save, !open, !vastaukset');
+		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") { //If command is for help, h or ?
+			client.say(channel, 'Available commands: !help, !hello, !calc, !math, !wolf, !quote, !quote(x), !save, !open, !vastaukset'); //Respond with a simple list of commands
 		}
-		if (message.substring(1,5) == "save") {
-			save.push(message.substring(6));
+		if (message.substring(1,5) == "save") { //If save command
+			save.push(message.substring(6)); //Save following message to save array
 		}
-		if (message.substring(1,5) == "open") {
-			client.say(channel,save);
+		if (message.substring(1,5) == "open") { //if open command
+			client.say(channel,save); //Respond with content of save array 
 		}
-		if (message.substring(1,11) == "vastaukset") {
-			if (message.length > 12) {
-				vastaukset = message.substring(12);
-			} else {
-				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset));
+		if (message.substring(1,11) == "vastaukset") { //If vastaukset command
+			if (message.length > 12) { //Check if there is message after the command
+				vastaukset = message.substring(12); //Add the message to vastaukset variable
+			} else { 
+				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset)); //Else respond with vastaukset variable
 			}
 		}
-		if (message.substring(1,6) == "quote")  {
-			if (message.length == 9) {
-				var x = parseFloat(message.substring(7,8));
-				if (x > quotes.length || isNaN(x) || x <= 0) {
-					client.say(channel, "Error :: Quote ID not found (1-"+quotes.length+")");
+		if (message.substring(1,6) == "quote")  { //If quote command
+			if (message.length == 9) { //Check if used !quote(<number>) command or not
+				var x = parseFloat(message.substring(7,8)); //Parse the number
+				if (x > quotes.length || isNaN(x) || x <= 0) { //If parse isn't in ID range
+					client.say(channel, "Error :: Quote ID not found (1-"+quotes.length+")"); //Respond with an error message
 				} else {
-					client.say(channel, quotes[x-1]);
+					client.say(channel, quotes[x-1]); //Else respond with the proper quote
 				}
-			} else if (message.length > 7) {
-				fs.open('quotes.bot', 'a', function(e, id) {
-					fs.write(id, message.substring(7)+'\n', null, 'utf8', function() {
-						fs.close(id, function(){ });
+			} else if (message.length > 7) { //Check if quote is folloed with a message
+				fs.open('quotes.bot', 'a', function(e, id) { //Open 'quote.bot' file in append mode (if file exists message will be added to a new row, if file does not exist it will be created)
+					fs.write(id, message.substring(7)+'\n', null, 'utf8', function() {  //Write the message to the 'quote.bot' file
+						fs.close(id, function(){ }); //Close the file
 					});
 				});
-				quotes.push(message.substring(7));
+				quotes.push(message.substring(7)); //Push the message into quotes array for temporary storrage and usage
 			} else {
-				client.say(channel, quotes[Math.floor(Math.random()*quotes.length)]);
+				client.say(channel, quotes[Math.floor(Math.random()*quotes.length)]); //Else respond with a random quote from the quotes array
 			}
 		}
 		//WolframAlpha stuff
-		if (message.substring(1,5) == 'wolf' || message.substring(1,5) == 'calc' || message.substring(1,5) == 'math') {
-			var lauseke = message.substring(6);
+		if (message.substring(1,5) == 'wolf' || message.substring(1,5) == 'calc' || message.substring(1,5) == 'math') { //If proper command is detected
+			var lauseke = message.substring(6); //Grab the math command
 			//Fix API call URL
 			var merkki = '+';
 			var merkki2 = '%2B';
@@ -135,13 +134,13 @@ client.addListener('message', function(from, to, message) {
 				if (i == 1) {merrki = '/'; merkki2 = '%2F' }
 				var intIndexOfMatch = lauseke.indexOf( merkki );
 				while (intIndexOfMatch != -1){
-					lauseke = lauseke.replace( merkki, merkki2 )
+					lauseke = lauseke.replace( merkki, merkki2 ) //Replaces '+' with '%2B' and '/' with '%2F'
 					intIndexOfMatch = lauseke.indexOf( merkki );
 				}
 			}
-			//Create the API call
+			//Create & make the API call & Grab the proper result
 			var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
-			request({uri: wolfurli}, function(err, response, body){
+			request({uri: wolfurli}, function(err, response, body){ 
 				var self = this;
 				self.items = new Array();
 				if (err && response.statusCode != 200){wolfvastaus = "Request error! You done goof'd";}
@@ -150,20 +149,20 @@ client.addListener('message', function(from, to, message) {
 					scripts: ['http://code.jquery.com/jquery-latest.min.js']
 				}, function(err, window){
 					var $ = window.jQuery;
-					var wolfvastaus = $("pod[title='Result']").find( $('plaintext') ).html();
-					var deciapprox = $("pod[title='Decimal approximation']").find( $('plaintext') ).html();
-					var exactresult = $("pod[title='Exact result']").find( $('plaintext') ).html();
-					if (wolfvastaus == null) var wolfvastaus = deciapprox;
-					if (wolfvastaus == null) var wolfvastaus = exactresult;
-					client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus));
-					console.log(wolfvastaus + ' => ' +message);
+					var wolfvastaus = $("pod[title='Result']").find( $('plaintext') ).html(); //Grab paintext under 'Result'
+					var deciapprox = $("pod[title='Decimal approximation']").find( $('plaintext') ).html(); //Grab paintext under 'Deciaml approximation'
+					var exactresult = $("pod[title='Exact result']").find( $('plaintext') ).html(); //Grab paintext under 'Exact result'
+					if (wolfvastaus == null) var wolfvastaus = deciapprox; //If no 'Result' present use 'Decimal approximation'
+					if (wolfvastaus == null) var wolfvastaus = exactresult; //if no 'Decimal approxmation' preset use 'Exact result' 
+					client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus)); //Respond with the answer to the query with "cyan" color
+					console.log(wolfvastaus + ' => ' +message); //And log the event into console log
 				});
 			});
 		}
-	} else {
-		fs.open('irc.log', 'a', function(e, id) {
-			fs.write(id, '<'+from+'> '+message+'\n', null, 'utf8', function() {
-				fs.close(id, function(){ });
+	} else { //If received message doesn't start with "!" i.e. it's not a command
+		fs.open('irc.log', 'a', function(e, id) { //Open 'irc.log' file with append mode
+			fs.write(id, '<'+from+'> '+message+'\n', null, 'utf8', function() { //And write '<sender> message' into the file
+				fs.close(id, function(){ }); //Close the file
 			});
 		});
 	}
