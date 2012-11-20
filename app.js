@@ -17,8 +17,14 @@ var	ircLib = require('irc')
 	});
 console.log('Bot running and connected to ' + channel + '...');
 
+//Read settings from file
+fs.readFile('quotes.bot', function(err, data) {
+    if(!err) {
+		quotes = data.toString().split("\n");
+	}
+});
 
-
+//Bot stuff
 stdin.addListener('data', function(d) {
 	var	cmd = d.toString().substring(0, d.length-2)
 	,	say = d.toString().substring(0,3);
@@ -129,6 +135,11 @@ client.addListener('message', function(from, to, message) {
 					client.say(channel, quotes[x-1]);
 				}
 			} else if (message.length > 7) {
+				fs.open('quotes.bot', 'a', function(e, id) {
+					fs.write(id, message.substring(7)+'\n', null, 'utf8', function() {
+						fs.close(id, function(){ });
+					});
+				});
 				quotes.push(message.substring(7));
 			} else {
 				client.say(channel, quotes[Math.floor(Math.random()*quotes.length)]);
