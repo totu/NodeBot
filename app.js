@@ -140,7 +140,9 @@ client.addListener('message', function(from, to, message) {
 					var $ = window.jQuery;
 					var wolfvastaus = $("pod[title='Result']").find( $('plaintext') ).html();
 					var deciapprox = $("pod[title='Decimal approximation']").find( $('plaintext') ).html();
+					var exactresult = $("pod[title='Exact result']").find( $('plaintext') ).html();
 					if (wolfvastaus == null) var wolfvastaus = deciapprox;
+					if (wolfvastaus == null) var wolfvastaus = exactresult;
 					client.say(channel, ircLib.colors.wrap('cyan', wolfvastaus));
 					console.log(wolfvastaus + ' => ' +message);
 				});
