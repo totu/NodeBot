@@ -4,34 +4,31 @@ var	sys = require('sys')
 ,	jsdom = require('jsdom')
 ,	request = require('request')
 ,	url = require('url')
+,	ircLib = require('irc')
+,	fs = require('fs')
 ,	grabbedString
 ,	save = []
 ,	quotes = []
+,	channelops = []
 ,	vastaukset;
-
-/* STUFF THAT YOU SHOULD CHANGE */
 
 var channel = '#kujalla';
 var botname = 'KujaBot';
 var AppID = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = false;
-
-
-/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+var devmode = true;
 
 //Creating the actual IRC client part
-var	ircLib = require('irc')
-,	fs = require('fs');
 if (devmode) {channel += "2"; botname += "2";}
 var client = new ircLib.Client('irc.quakenet.org', botname, {channels: [channel],});
 console.log('Bot running and connected to ' + channel + '...');
 
 //Read settings from file
 fs.readFile('quotes.bot', function(err, data) { //Open 'quotes.bot' file
-    if(!err) { //If no errors
-		quotes = data.toString().split("\n"); //Add the content of the file into 'quotes' array
-	}
+    if(!err) quotes = data.toString().split("\n"); //Add the content of the file into 'quotes' array
+});
+fs.readFile('ops.bot', function(err, data) {
+    if(!err) channelops = data.toString().split("\n");
 });
 
 //Bot stuff
@@ -43,6 +40,23 @@ stdin.addListener('data', function(d) {	//Adding a listener to standard input
 	}
 });
 
+//Private stuff
+client.addListener('pm', function (from, message) {
+	var str = channelops.indexOf(from);
+	if (str > -1 && message == 'opme')
+		client.send('MODE', channel, '+o', from);
+	if (message.substring(0,5) == 'addop') {
+		fs.open('ops.bot', 'a', function(e, id) { 
+			fs.write(id, message.substring(6)+'\n', null, 'utf8', function() {
+				fs.close(id, function(){ }); 
+			});
+		});
+		channelops.push(message.substring(6));
+	}
+	if (message == 'ops') {console.log(channelops);}
+});
+
+//Channel stuff
 client.addListener('message', function(from, to, message) { //Adding a listener for messages from the IRC channel
 	//Website grab stuff
 	for (var i = 0; i < websites.length; i++) { //For each in websites
@@ -67,35 +81,29 @@ client.addListener('message', function(from, to, message) { //Adding a listener 
 		}
 	}
 	
-	//Bot stuff
+	//Bot command stuff
 	if (message.charAt(0) == "!") { //If channel message starts with "!" => message is a command
-		if (message.substring(1,6) == "hello") { //If command is "hello"
-			client.say(channel,'Hi, '+from+'!');	//Respond with "Hi, sender"
-		}
-		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") { //If command is for help, h or ?
+		if (message.substring(1,6) == "hello") //If command is "hello"
+			client.say(channel,'Hi, '+from+'!'); //Respond with "Hi, sender"
+		if (message.substring(1) == "help" || message.substring(1) == "h" || message.substring(1) == "?") //If command is for help, h or ?
 			client.say(channel, 'Available commands: !help, !hello, !calc, !math, !wolf, !quote, !quote(x), !save, !open, !vastaukset'); //Respond with a simple list of commands
-		}
-		if (message.substring(1,5) == "save") { //If save command
+		if (message.substring(1,5) == "save") //If save command
 			save.push(message.substring(6)); //Save following message to save array
-		}
-		if (message.substring(1,5) == "open") { //if open command
-			client.say(channel,save); //Respond with content of save array 
-		}
+		if (message.substring(1,5) == "open") //if open command
+			client.say(channel,save); //Respond with content of save array
 		if (message.substring(1,11) == "vastaukset") { //If vastaukset command
-			if (message.length > 12) { //Check if there is message after the command
+			if (message.length > 12) //Check if there is message after the command
 				vastaukset = message.substring(12); //Add the message to vastaukset variable
-			} else { 
-				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset)); //Else respond with vastaukset variable
-			}
+			else
+				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset)); //Else respond with vastaukset variable		
 		}
 		if (message.substring(1,6) == "quote")  { //If quote command
 			if (message.length == 9) { //Check if used !quote(<number>) command or not
 				var x = parseFloat(message.substring(7,8)); //Parse the number
-				if (x > quotes.length || isNaN(x) || x <= 0) { //If parse isn't in ID range
+				if (x > quotes.length || isNaN(x) || x <= 0) //If parse isn't in ID range
 					client.say(channel, "Error :: Quote ID not found (1-"+quotes.length+")"); //Respond with an error message
-				} else {
+				else
 					client.say(channel, quotes[x-1]); //Else respond with the proper quote
-				}
 			} else if (message.length > 7) { //Check if quote is folloed with a message
 				fs.open('quotes.bot', 'a', function(e, id) { //Open 'quote.bot' file in append mode (if file exists message will be added to a new row, if file does not exist it will be created)
 					fs.write(id, message.substring(7)+'\n', null, 'utf8', function() {  //Write the message to the 'quote.bot' file
