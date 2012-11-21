@@ -37,55 +37,54 @@ the collective opinnion once it's formed, even if they can't get hold of anyone.
 1. You need node.js (http://nodejs.org).  For node.js installation instructions prefer to their own documentation.
 
    
-2. JSDOM requires Python 2.7 (NOT 3.2). 
-	* So install Python (http://python.org).
+2. JSDOM requires Python 2.7 (NOT 3.2). So install Python (http://python.org).
  
  
 3. Run npm install.
-	`npm install`
+`npm install`
 
 	
 4. Configure bot's basic information:
-	* From `app.js` change server, channel and bot's nick to what you want.
-	* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
-	* Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
+* From `app.js` change server, channel and bot's nick to what you want.
+* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
+* Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
 
 	
 5. Start the program.
-	`node app.js`
+`node app.js`
 
 ---------------------------------
 
 ##How to use commands? e.g. the RTFM section:
 
-`!help`, `!h` or `!?`
+* `!help`, `!h` or `!?`
 	* Shows all channel commands.
-`!hello`
+* `!hello`
 	* Responds with "Hello, <sender>".
-`!save <message>`
+* `!save <message>`
 	* Pushes message to save array.
-`!open`
+* `!open`
 	* Responds with content of save array.
-`!vastaukset`
+* `!vastaukset`
 	* Respods with vastaukset variable.
-`!vastaukset <message>`
+* `!vastaukset <message>`
 	* Saves message to vastaukset variable.
-`!quote`
+* `!quote`
 	* Responds with a random entry from quotes array.
-`!quote <message>`
+* `!quote <message>`
 	* Saves message to quotes array.
-`!quote(<number>)`
+* `!quote(<number>)`
 	* Reponds with a specific entry from quotes array.
-`!math <message>`, `!calc <message>` or `!wolf <message>`
+* `!math <message>`, `!calc <message>` or `!wolf <message>`
 	* Sends message to WolframAlpha API and responds with either *Result*, 
 	*Decimal approximation* or *Exact result* entries.
 
 	
 **PM commands:**
 
-`opme`
+* `opme`
 	* If senders nickname is in `ops.bot` file, bot will grant the sender channel +o mode.
-`addop *name*`
+* `addop *name*`
 	* If senders nickname is in `ops.bot` file, name will be added to `ops.bot` file.
 
 ---------------------------------
