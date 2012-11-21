@@ -13,7 +13,10 @@ var	sys = require('sys')
 
 var channel = '#kujalla';
 var botname = 'KujaBot';
+var AppID = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
+var websites = ['youtube.com', 'riemurasia.net'];
 var devmode = false;
+
 
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
 
@@ -41,49 +44,29 @@ stdin.addListener('data', function(d) {	//Adding a listener to standard input
 });
 
 client.addListener('message', function(from, to, message) { //Adding a listener for messages from the IRC channel
-	//YouTube stuff 
-	if (message.substring(8,24) == "www.youtube.com/" || message.substring(7,23) == "www.youtube.com/" || message.substring(0,16) == "www.youtube.com/" || message.substring(7,16) == "youtu.be/") { //If message starts with YouTube URL
-		if (message.substring(0,3) == "www") {	//Add the missing 'http://'
-			message = "http://"+message; 
-		}
-		request({uri: message}, function(err, response, body){ 	//Request handler
-			var self = this; //Add the site to 'self' variable
-			self.items = []; //Make array out of items in self
-			if (err && response.statusCode != 200){grabbedString = "Request error! You done goof'd";} //If page doesn't return 200 (OK) code, report error.
-			jsdom.env({ 													//Enstablish jsdom environment
-				html: body,													//Include body as html
-				scripts: ['http://code.jquery.com/jquery-latest.min.js']	//Include latest jquery as script
-			}, function(err, window){
-				var $ = window.jQuery
-				grabbedString = $('title').text() //Grab site's title
-				client.say(channel, ircLib.colors.wrap('cyan', grabbedString)); //Broadcast site's title to the IRC channel with 'cyan' color
-				console.log(grabbedString + ' => ' +message);  //And log the event in console
+	//Website grab stuff
+	for (var i = 0; i < websites.length; i++) { //For each in websites
+		var re = new RegExp(websites[i], 'i'); //Make a new Regular Expression
+		var search = message.search(re); //Search message for said RegExp
+		if (search != -1) { //If RegExp is found
+			message = "http://www." + message.substring(search); //Add missing "http://www." infront of the string
+			request({uri: message}, function(err, response, body){ 	//Request handler
+				var self = this; //Add the site to 'self' variable
+				self.items = []; //Make array out of items in self
+				if (err && response.statusCode != 200){grabbedString = "Request error! You done goof'd";} //If page doesn't return 200 (OK) code, report error.
+				jsdom.env({ 													//Enstablish jsdom environment
+					html: body,													//Include body as html
+					scripts: ['http://code.jquery.com/jquery-latest.min.js']	//Include latest jquery as script
+				}, function(err, window){
+					var $ = window.jQuery
+					grabbedString = $('title').text() //Grab site's title
+					client.say(channel, ircLib.colors.wrap('cyan', grabbedString)); //Broadcast site's title to the IRC channel with 'cyan' color
+					console.log(grabbedString + ' => ' +message);  //And log the event in console
+				});
 			});
-		});
+		}
 	}
 	
-	//Riemurasia stuff *** Same exact code used here as above *** FIX THIS:(Should be implemented as a function rather than repeating)
-	if (message.substring(8,27) == "www.riemurasia.net/" || message.substring(7,26) == "www.riemurasia.net/" || message.substring(0,19) == "www.riemurasia.net/") {
-		if (message.substring(0,3) == "www") {
-			message = "http://"+message;
-		}
-		request({uri: message}, function(err, response, body){
-			var self = this;
-			self.items = []
-			if(err && response.statusCode != 200){grabbedString = "Request error! You done goof'd";}
-			jsdom.env({
-				html: body,
-				scripts: ['http://code.jquery.com/jquery-1.6.min.js']
-			}, function(err, window){
-				var $ = window.jQuery;
-				grabbedString = $('title').text()
-				client.say(channel, ircLib.colors.wrap('cyan', grabbedString + '- Riemurasia'));
-				console.log(grabbedString + ' => ' +message);
-			});
-		});
-	}
-
-
 	//Bot stuff
 	if (message.charAt(0) == "!") { //If channel message starts with "!" => message is a command
 		if (message.substring(1,6) == "hello") { //If command is "hello"
@@ -139,7 +122,7 @@ client.addListener('message', function(from, to, message) { //Adding a listener 
 				}
 			}
 			//Create & make the API call & Grab the proper result
-			var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=39KJT4-EUJ8A7U6TA&format=plaintext&input=" + lauseke;
+			var wolfurli = 	"http://api.wolframalpha.com/v2/query?appid=" + AppID + "&format=plaintext&input=" + lauseke; 
 			request({uri: wolfurli}, function(err, response, body){ 
 				var self = this;
 				self.items = new Array();
