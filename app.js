@@ -16,7 +16,7 @@ var channel = '#kujalla';
 var botname = 'KujaBot';
 var AppID = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = true;
+var devmode = false;
 
 //Creating the actual IRC client part
 if (devmode) {channel += "2"; botname += "2";}
