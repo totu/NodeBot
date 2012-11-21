@@ -30,7 +30,6 @@ Main functions as of version 1.0 are:
 * Giving us a simple place to store homework answers, so people can easily check
 the collective opinnion once it's formed, even if they can't get hold of anyone.
 
----------------------------------
 
 ##Installation & configuration:
 
@@ -45,15 +44,14 @@ the collective opinnion once it's formed, even if they can't get hold of anyone.
 
 	
 4. Configure bot's basic information:
-* From `app.js` change server, channel and bot's nick to what you want.
-* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
-* Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
+	- From `app.js` change server, channel and bot's nick to what you want.
+	- From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
+	- Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
 
 	
 5. Start the program.
 `node app.js`
 
----------------------------------
 
 ##How to use commands? e.g. the RTFM section:
 
