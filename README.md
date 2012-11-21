@@ -8,10 +8,11 @@ on our IRC channel.
 
 ---------------------------------
 
-Version 1.2:
+**Version 1.2:**
 
 * Added quotes function [!quote, !quote(<number>)]
 * Implimented WolframAlpha properly [!wolf, !math or !calc]
+* Mode +o via PM [/msg NodeBot opme]
 
 
 
@@ -31,7 +32,7 @@ the collective opinnion once it's formed, even if they can't get hold of anyone.
 
 ---------------------------------
 
-Installation & configuration:
+##Installation & configuration:
 
 1. You need node.js (http://nodejs.org).  For node.js installation instructions prefer to their own documentation.
 
@@ -46,12 +47,50 @@ Installation & configuration:
 5. Configure bot's basic information.
 	* From `app.js` change server, channel and bot's nick to what you want.
 	* From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
+	* Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
 
 	
 5. Start the program.
 `node app.js`
 
 ---------------------------------
+
+##How to use commands? e.g. the RTFM section:
+
+* `!help`, `!h` or `!?`
+	* Shows all channel commands.
+* `!hello`
+	* Responds with "Hello, <sender>".
+* `!save <message>`
+	* Pushes message to save array.
+* `!open`
+	* Responds with content of save array.
+* `!vastaukset`
+	* Respods with vastaukset variable.
+* `!vastaukset <message>`
+	* Saves message to vastaukset variable.
+* `!quote`
+	* Responds with a random entry from quotes array.
+* `!quote <message>`
+	* Saves message to quotes array.
+* `!quote(<number>)`
+	* Reponds with a specific entry from quotes array.
+* `!math <message>`, `!calc <message>` or `!wolf <message>`
+	* Sends message to WolframAlpha API and responds with either *Result*, 
+	*Decimal approximation* or *Exact result* entries.
+
+	
+**PM commands:**
+
+* `opme`
+	* If senders nickname is in `ops.bot` file, bot will grant the sender channel +o mode.
+
+* `addop *name*`
+	* If senders nickname is in `ops.bot` file, name will be added to `ops.bot` file.
+
+---------------------------------
+
+##That other section...
 
 Need to submit bugs? Feature requests? Just want to comment?
 topi.tuulensuu@student.hamk.fi

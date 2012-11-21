@@ -40,12 +40,12 @@ stdin.addListener('data', function(d) {	//Adding a listener to standard input
 	}
 });
 
-//Private stuff
+//PM stuff
 client.addListener('pm', function (from, message) {
 	var str = channelops.indexOf(from);
 	if (str > -1 && message == 'opme')
 		client.send('MODE', channel, '+o', from);
-	if (message.substring(0,5) == 'addop') {
+	if (str > -1 && message.substring(0,5) == 'addop') {
 		fs.open('ops.bot', 'a', function(e, id) { 
 			fs.write(id, message.substring(6)+'\n', null, 'utf8', function() {
 				fs.close(id, function(){ }); 
