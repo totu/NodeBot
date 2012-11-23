@@ -16,7 +16,7 @@ var channel = '#kujalla';
 var botname = 'KujaBot';
 var AppID = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = false;
+var devmode = true;
 
 //Creating the actual IRC client part
 if (devmode) {channel += "2"; botname += "2";}
@@ -43,17 +43,29 @@ stdin.addListener('data', function(d) {	//Adding a listener to standard input
 //PM stuff
 client.addListener('pm', function (from, message) {
 	var str = channelops.indexOf(from);
-	if (str > -1 && message == 'opme')
+	if (str > -1 && message == '!opme')
 		client.send('MODE', channel, '+o', from);
-	if (str > -1 && message.substring(0,5) == 'addop') {
+	if (str > -1 && message.substring(0,6) == '!addop') {
 		fs.open('ops.bot', 'a', function(e, id) { 
-			fs.write(id, message.substring(6)+'\n', null, 'utf8', function() {
+			fs.write(id, message.substring(7)+'\n', null, 'utf8', function() {
 				fs.close(id, function(){ }); 
 			});
 		});
 		channelops.push(message.substring(6));
 	}
-	if (message == 'ops') {console.log(channelops);}
+	if (message == '!ops') {console.log(channelops);}
+	if (message == '!logs') {
+		fs.readFile('irc.log', function(err, data) {
+			if (err) {
+				client.say(from, err);
+			} else {
+				var logs = data.toString().split('\n');
+				for (var i = logs.length-15; i < logs.length; i++) {
+					client.say(from, logs[i]);
+				}
+			}
+		});
+	}
 });
 
 //Channel stuff
