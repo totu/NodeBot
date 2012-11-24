@@ -134,7 +134,7 @@ client.addListener('message', function(from, to, message) { //Adding a listener 
 			var merkki = '+';
 			var merkki2 = '%2B';
 			for (var i = 0; i < 2; i++) {
-				if (i == 1) {merrki = '/'; merkki2 = '%2F' }
+				if (i == 1) {merkki = '/'; merkki2 = '%2F' }
 				var intIndexOfMatch = lauseke.indexOf( merkki );
 				while (intIndexOfMatch != -1){
 					lauseke = lauseke.replace( merkki, merkki2 ) //Replaces '+' with '%2B' and '/' with '%2F'
