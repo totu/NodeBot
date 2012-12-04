@@ -16,7 +16,7 @@ var channel = '#kujalla';
 var botname = 'KujaBot';
 var AppID = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = true;
+var devmode = false;
 
 //Creating the actual IRC client part
 if (devmode) {channel += "2"; botname += "2";}
@@ -29,6 +29,9 @@ fs.readFile('quotes.bot', function(err, data) { //Open 'quotes.bot' file
 });
 fs.readFile('ops.bot', function(err, data) {
     if(!err) channelops = data.toString().split("\n");
+});
+fs.readFile('vastaukset.bot', function(err, data) {
+    if(!err) vastaukset = data.toString();
 });
 
 //Bot stuff
@@ -103,12 +106,19 @@ client.addListener('message', function(from, to, message) { //Adding a listener 
 			save.push(message.substring(6)); //Save following message to save array
 		if (message.substring(1,5) == "open") //if open command
 			client.say(channel,save); //Respond with content of save array
+			
 		if (message.substring(1,11) == "vastaukset") { //If vastaukset command
-			if (message.length > 12) //Check if there is message after the command
+			if (message.length > 12) {//Check if there is message after the command
 				vastaukset = message.substring(12); //Add the message to vastaukset variable
-			else
+				fs.open('vastaukset.bot', 'w', function(e, id) { //Open 'quote.bot' file in append mode (if file exists message will be added to a new row, if file does not exist it will be created)
+					fs.write(id, message.substring(12), null, 'utf8', function() {  //Write the message to the 'vastaukset.bot' file
+						fs.close(id, function(){ }); //Close the file
+					});
+				});
+			} else
 				client.say(channel, ircLib.colors.wrap('yellow', 'Päivän lotto rivi on: ' + vastaukset)); //Else respond with vastaukset variable		
 		}
+		
 		if (message.substring(1,6) == "quote")  { //If quote command
 			if (message.length == 9) { //Check if used !quote(<number>) command or not
 				var x = parseFloat(message.substring(7,8)); //Parse the number
