@@ -22,35 +22,48 @@ bot.addListener('message', function(from, to, message) {
 	
 		if (message.search(new RegExp('hi', 'i')) != -1 || message.search(new RegExp('hello', 'i')) != -1) {
 			bot.say(channel, irc.colors.wrap('cyan', 'Hi, ' + from));
-		} 
+		} else if (message.search(new RegExp('etsi', 'i')) != -1 || message.search(new RegExp('search', 'i')) != -1) {
+			message = message.split(' ').splice(2,message.length);
+			var query = message.join('+');
+			var url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + query;
+			request({uri: url}, function(err, response, body) { 
+				var obj = JSON.parse(body);
+				bot.say(channel, irc.colors.wrap('cyan', obj.responseData.results[0].url));
+			});
+		}
 		
 		else {
 			message = message.split(' ').splice(1,message.length);
 			var lauseke = message.join(' ');
-			var merkki = '+';
-			var merkki2 = '%2B';
-			for (var i = 0; i < 2; i++) {
-				if (i == 1) { merkki = '/'; merkki2 = '%2F'; }
-				var intIndexOfMatch = lauseke.indexOf( merkki );
-				while (intIndexOfMatch != -1) {
-					lauseke = lauseke.replace( merkki, merkki2 );
-					intIndexOfMatch = lauseke.indexOf( merkki );
+			if (lauseke != '' || lauseke != null) {
+				var merkki = '+';
+				var merkki2 = '%2B';
+				for (var i = 0; i < 2; i++) {
+					if (i == 1) { merkki = '/'; merkki2 = '%2F'; }
+					var intIndexOfMatch = lauseke.indexOf( merkki );
+					while (intIndexOfMatch != -1) {
+						lauseke = lauseke.replace( merkki, merkki2 );
+						intIndexOfMatch = lauseke.indexOf( merkki );
+					}
 				}
-			}
-			var wolfurli = "http://api.wolframalpha.com/v2/query?appid=" + Wolfram_API_key + "&format=plaintext&input=" + lauseke; 
-			request({uri: wolfurli}, function(err, response, body){ 
-				var self = this;
-				self.items = new Array();
-				if (err && response.statusCode != 200){wolfvastaus = "Request error! You done goof'd";}
-				jsdom.env({
-					html: body,
-					scripts: ['http://code.jquery.com/jquery-latest.min.js']
-				}, function(err, window){
-					var $ = window.jQuery;
-					var wolfvastaus = $('pod:first-child').next().find( $('plaintext') ).html();	
-					bot.say(channel, irc.colors.wrap('cyan', wolfvastaus)); 
+				var wolfurli = "http://api.wolframalpha.com/v2/query?appid=" + Wolfram_API_key + "&format=plaintext&input=" + lauseke; 
+				request({uri: wolfurli}, function(err, response, body){ 
+					var self = this;
+					self.items = new Array();
+					if (err) {
+						wolfvastaus = "Request error! You done goof'd";
+					} else {
+						jsdom.env({
+							html: body,
+							scripts: ['http://code.jquery.com/jquery-latest.min.js']
+						}, function(err, window){
+							var $ = window.jQuery;
+							var wolfvastaus = $('pod:first-child').next().find( $('plaintext') ).html();	
+							bot.say(channel, irc.colors.wrap('cyan', wolfvastaus)); 
+						});
+					}
 				});
-			});
+			}
 		}
 	} else {
 		for (var i = 0; i < websites.length; i++) {
