@@ -9,7 +9,7 @@ var botname = 'KujaBot';
 var channel = '#kujalla';
 var Wolfram_API_key = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = false;
+var devmode = true;
 
 if (devmode) {channel += "2"; botname += "2";}
 
@@ -18,22 +18,23 @@ console.log('Bot running and connected to ' + channel + '...');
 
 //Bot stuff
 bot.addListener('message', function(from, to, message) {
-	if (message.search(new RegExp(botname, 'i')) != -1) {
-	
+	if (message.substring(0,botname.length) == botname) {
 		if (message.search(new RegExp('hi', 'i')) != -1 || message.search(new RegExp('hello', 'i')) != -1) {
 			bot.say(channel, irc.colors.wrap('cyan', 'Hi, ' + from));
+		
 		} else if (message.search(new RegExp('etsi', 'i')) != -1 || message.search(new RegExp('search', 'i')) != -1) {
 			message = message.split(' ').splice(2,message.length);
 			var query = message.join('+');
 			var url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + query;
 			request({uri: url}, function(err, response, body) { 
 				var obj = JSON.parse(body);
-				bot.say(channel, irc.colors.wrap('cyan', obj.responseData.results[0].url));
+				var rand = Math.floor(Math.random()*4);
+				bot.say(channel, irc.colors.wrap('cyan', obj.responseData.results[rand].url));
 			});
 		}
 		
-		else {
-			message = message.split(' ').splice(1,message.length);
+		else if (message.search(new RegExp('laske', 'i')) != -1 || message.search(new RegExp('calculate', 'i')) != -1)  {
+			message = message.split(' ').splice(2,message.length);
 			var lauseke = message.join(' ');
 			if (lauseke != '' || lauseke != null) {
 				var merkki = '+';
@@ -64,6 +65,10 @@ bot.addListener('message', function(from, to, message) {
 					}
 				});
 			}
+		}
+		
+		else {
+			bot.say(channel, irc.colors.wrap('cyan', 'Wrong syntax! Use: <botname> <command> <query>'));
 		}
 	} else {
 		for (var i = 0; i < websites.length; i++) {
