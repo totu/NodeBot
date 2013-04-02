@@ -1,14 +1,15 @@
 {
   "name": "node-bot",
-  "version": "0.0.1",
+  "version": "2.0",
   "dependencies": {
-    "irc": "x",
+	"irc": "x",
 	"request": "x",
 	"url": "x",
-	"jsdom":"x"
+	"jsdom":"x",
+	"emailjs":"x"
   },
   "engines": {
-    "node": "0.8.x",
-    "npm": "1.1.x"
+    "node": "x",
+    "npm": "x"
   }
 }
