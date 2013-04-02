@@ -3,12 +3,16 @@
 , 	jsdom = require('jsdom')
 ,	request = require('request')
 ,	url = require('url')
+,	mail = require("emailjs")
 ,	grabbedString;
 
 var botname = 'KujaBot';
 var channel = '#kujalla';
 var Wolfram_API_key = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
+var mailuser = '';
+var mailpass = '';
+var mailhost = '';
 var devmode = true;
 
 if (devmode) {channel += "2"; botname += "2";}
@@ -59,16 +63,43 @@ bot.addListener('message', function(from, to, message) {
 							scripts: ['http://code.jquery.com/jquery-latest.min.js']
 						}, function(err, window){
 							var $ = window.jQuery;
-							var wolfvastaus = $('pod:first-child').next().find( $('plaintext') ).html();	
-							bot.say(channel, irc.colors.wrap('cyan', wolfvastaus)); 
+							var wolfvastaus = $('pod:first-child').next().find( $('plaintext') ).html();
+							if (wolfvastaus == null || wolfvastaus == '') bot.say(channel, irc.colors.wrap('cyan', 'Sorry, but that was just too fuck\'d up for me to show you.'));
+							else bot.say(channel, irc.colors.wrap('cyan', wolfvastaus)); 
 						});
 					}
 				});
 			}
 		}
 		
+		else if (message.search(new RegExp('mail', 'i')) != -1) {
+			var text = message.split(' ').splice(4,message.length).join(' ');
+			var to = message.split(' ').splice(2,1);
+			var subject = message.split(' ').splice(3,1);
+			if (message.split(' ').lenght >= 5) {
+			
+				var server  = mail.server.connect({
+				   user: mailuser, 
+				   password: mailpass, 
+				   host: mailhost, 
+				   ssl: true
+				});
+				
+				server.send({
+					   text: text, 
+					   from: "KujaBot <Kujis@kujalla.com", 
+					   to: "<" + to + ">",
+					   subject: subject
+					}, function(err, message) {
+						if (err) bot.say(channel, irc.colors.wrap('cyan', err));
+						else bot.say(channel, irc.colors.wrap('cyan', 'Sent that for ya\'')); 
+				});
+			} else {
+				bot.say(channel, irc.colors.wrap('cyan', 'You must be new here, proper usage should look something like this: <botname> mail <to> <subject> <text>')); 
+			}
+		}
 		else {
-			bot.say(channel, irc.colors.wrap('cyan', 'Wrong syntax! Use: <botname> <command> <query>'));
+			bot.say(channel, irc.colors.wrap('cyan', 'I don\'t have a clue what you are trying to do, here are some instructions: <botname> <command> <query>'));
 		}
 	} else {
 		for (var i = 0; i < websites.length; i++) {
