@@ -76,7 +76,7 @@ bot.addListener('message', function(from, to, message) {
 			var text = message.split(' ').splice(4,message.length).join(' ');
 			var to = message.split(' ').splice(2,1);
 			var subject = message.split(' ').splice(3,1);
-			if (message.split(' ').lenght >= 5) {
+			if (message.split(' ').length >= 5) {
 			
 				var server  = mail.server.connect({
 				   user: mailuser, 
