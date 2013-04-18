@@ -34,6 +34,8 @@ on our IRC channel.
 ##Commands
 Commands include, but may not be limited to:
 Hello, search, wiki, calculate & mail
+
+
 ---------------------------------
 
 ##That other section...
