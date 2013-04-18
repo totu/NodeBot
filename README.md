@@ -8,28 +8,6 @@ on our IRC channel.
 
 ---------------------------------
 
-**Version 1.2:**
-
-* Added quotes function [!quote, !quote(<number>)]
-* Implimented WolframAlpha properly [!wolf, !math or !calc]
-* Mode +o via PM [/msg NodeBot opme]
-
-
-
-Version 1.1:
-
-* Added title grabbing for Riemurasia
-* Added few experimental functions.
-
-
-
-Main functions as of version 1.0 are:
-
-* Grabbing video titles from YouTube links and displaying them on the channel.
-
-* Giving us a simple place to store homework answers, so people can easily check
-the collective opinnion once it's formed, even if they can't get hold of anyone.
-
 
 ##Installation & configuration:
 
@@ -52,39 +30,10 @@ the collective opinnion once it's formed, even if they can't get hold of anyone.
 5. Start the program.
 `node app.js`
 
-
-##How to use commands? e.g. the RTFM section:
-
-* `!help`, `!h` or `!?`
-	* Shows all channel commands.
-* `!hello`
-	* Responds with "Hello, <sender>".
-* `!save <message>`
-	* Pushes message to save array.
-* `!open`
-	* Responds with content of save array.
-* `!vastaukset`
-	* Respods with vastaukset variable.
-* `!vastaukset <message>`
-	* Saves message to vastaukset variable.
-* `!quote`
-	* Responds with a random entry from quotes array.
-* `!quote <message>`
-	* Saves message to quotes array.
-* `!quote(<number>)`
-	* Reponds with a specific entry from quotes array.
-* `!math <message>`, `!calc <message>` or `!wolf <message>`
-	* Sends message to WolframAlpha API and responds with either *Result*, 
-	*Decimal approximation* or *Exact result* entries.
-
-	
-**PM commands:**
-
-* `opme`
-	* If senders nickname is in `ops.bot` file, bot will grant the sender channel +o mode.
-* `addop *name*`
-	* If senders nickname is in `ops.bot` file, name will be added to `ops.bot` file.
-
+---------------------------------
+##Commands
+Commands include, but may not be limited to:
+Hello, search, wiki, calculate & mail
 ---------------------------------
 
 ##That other section...
