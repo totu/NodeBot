@@ -1,0 +1,148 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/bin/npm', 'install', 'request' ]
+info using npm@1.1.4
+info using node@v0.6.12
+verbose config file /home/totu/.npmrc
+verbose config file /usr/etc/npmrc
+verbose config file /usr/share/npm/npmrc
+verbose caching /home/totu/git/nodebot/package.json
+verbose loadDefaults node-bot@0.0.1
+verbose caching /home/totu/git/nodebot/node_modules/url/package.json
+verbose caching /home/totu/git/nodebot/node_modules/mongojs/package.json
+verbose caching /home/totu/git/nodebot/node_modules/emailjs/package.json
+verbose caching /home/totu/git/nodebot/node_modules/irc/package.json
+verbose from cache /home/totu/git/nodebot/package.json
+verbose readDependencies: using package.json deps
+verbose cache add [ 'request@*', null ]
+silly cache add: name, spec, args [ undefined, 'request@*', [ 'request@*', null ] ]
+verbose parsed url { pathname: 'request@*', path: 'request@*', href: 'request@*' }
+silly cache add: name, spec, args [ 'request', '*', [ 'request', '*' ] ]
+verbose parsed url { pathname: '*', path: '*', href: '*' }
+verbose addNamed [ 'request', '*' ]
+verbose addNamed [ null, '' ]
+silly name, range, hasData [ 'request', '', false ]
+verbose raw, before any munging request
+verbose url resolving [ 'https://registry.npmjs.org/', './request' ]
+verbose url resolved https://registry.npmjs.org/request
+verbose etag "2V7VE3TYRZGQTWWKM0UM8YZS9"
+http GET https://registry.npmjs.org/request
+http 304 https://registry.npmjs.org/request
+silly get cb [ 304,
+silly get cb   { server: 'CouchDB/1.3.0 (Erlang OTP/R15B03)',
+silly get cb     etag: '"2V7VE3TYRZGQTWWKM0UM8YZS9"',
+silly get cb     date: 'Thu, 30 May 2013 16:21:43 GMT',
+silly get cb     'content-length': '0' } ]
+verbose etag request from cache
+silly name, range, hasData 2 [ 'request', '', true ]
+silly versions [ 'request',
+silly versions   [ '0.10.0',
+silly versions     '0.8.3',
+silly versions     '0.9.0',
+silly versions     '0.9.1',
+silly versions     '0.9.5',
+silly versions     '1.0.0',
+silly versions     '1.1.0',
+silly versions     '1.1.1',
+silly versions     '1.2.0',
+silly versions     '1.9.0',
+silly versions     '1.9.1',
+silly versions     '1.9.2',
+silly versions     '1.9.3',
+silly versions     '1.9.5',
+silly versions     '1.9.7',
+silly versions     '1.9.8',
+silly versions     '1.9.9',
+silly versions     '2.0.0',
+silly versions     '2.0.1',
+silly versions     '2.0.2',
+silly versions     '2.0.3',
+silly versions     '2.0.4',
+silly versions     '2.0.5',
+silly versions     '2.1.0',
+silly versions     '2.1.1',
+silly versions     '2.2.0',
+silly versions     '2.2.5',
+silly versions     '2.2.6',
+silly versions     '2.2.9',
+silly versions     '2.9.0',
+silly versions     '2.9.1',
+silly versions     '2.9.2',
+silly versions     '2.9.3',
+silly versions     '2.9.100',
+silly versions     '2.9.150',
+silly versions     '2.9.151',
+silly versions     '2.9.152',
+silly versions     '2.9.153',
+silly versions     '2.9.200',
+silly versions     '2.9.201',
+silly versions     '2.9.202',
+silly versions     '2.9.203',
+silly versions     '2.10.0',
+silly versions     '2.11.0',
+silly versions     '2.11.1',
+silly versions     '2.11.2',
+silly versions     '2.11.3',
+silly versions     '2.11.4',
+silly versions     '2.12.0',
+silly versions     '2.14.0',
+silly versions     '2.16.0',
+silly versions     '2.16.2',
+silly versions     '2.16.4',
+silly versions     '2.16.6',
+silly versions     '2.18.0',
+silly versions     '2.19.0',
+silly versions     '2.20.0',
+silly versions     '2.21.0' ] ]
+verbose bin dist [ '0.6-ares1.7.5-evundefined-openssl1.0.1-v83.7.12.22-linux-ia32-3.5.0-31-generic',
+verbose bin dist   { shasum: '5728ab9c45e5a87c99daccd530298b6673a868d7',
+verbose bin dist     tarball: 'http://registry.npmjs.org/request/-/request-2.21.0.tgz' } ]
+verbose caching /home/totu/.npm/request/2.21.0/package/package.json
+verbose loadDefaults request@2.21.0
+silly resolved [ { name: 'request',
+silly resolved     description: 'Simplified HTTP request client.',
+silly resolved     tags: [ 'http', 'simple', 'util', 'utility' ],
+silly resolved     version: '2.21.0',
+silly resolved     author: { name: 'Mikeal Rogers', email: 'mikeal.rogers@gmail.com' },
+silly resolved     repository: { type: 'git', url: 'git://github.com/mikeal/request.git' },
+silly resolved     bugs: { url: 'http://github.com/mikeal/request/issues' },
+silly resolved     engines: [ 'node >= 0.8.0', node: ' >= 0.8.0' ],
+silly resolved     main: 'index.js',
+silly resolved     dependencies: 
+silly resolved      { qs: '~0.6.0',
+silly resolved        'json-stringify-safe': '~4.0.0',
+silly resolved        'forever-agent': '~0.5.0',
+silly resolved        'tunnel-agent': '~0.3.0',
+silly resolved        'http-signature': '~0.9.11',
+silly resolved        hawk: '~0.13.0',
+silly resolved        'aws-sign': '~0.3.0',
+silly resolved        'oauth-sign': '~0.3.0',
+silly resolved        'cookie-jar': '~0.3.0',
+silly resolved        'node-uuid': '~1.4.0',
+silly resolved        mime: '~1.2.9',
+silly resolved        'form-data': '0.0.8' },
+silly resolved     scripts: { test: 'node tests/run.js' },
+silly resolved     _id: 'request@2.21.0',
+silly resolved     devDependencies: {},
+silly resolved     optionalDependencies: {},
+silly resolved     _engineSupported: false,
+silly resolved     _npmVersion: '1.1.4',
+silly resolved     _nodeVersion: 'v0.6.12',
+silly resolved     _defaultsLoaded: true,
+silly resolved     _from: 'request@*' } ]
+info into /home/totu/git/nodebot request@2.21.0
+info installOne request@2.21.0
+verbose installOne cb request@2.21.0
+ERR! Unsupported
+ERR! Not compatible with your version of node/npm: request@2.21.0
+ERR! Required: ["node >= 0.8.0"]
+ERR! Actual:   {"npm":"1.1.4","node":"0.6.12"}
+ERR! 
+ERR! System Linux 3.5.0-31-generic
+ERR! command "node" "/usr/bin/npm" "install" "request"
+ERR! cwd /home/totu/git/nodebot
+ERR! node -v v0.6.12
+ERR! npm -v 1.1.4
+ERR! code ENOTSUP
+ERR! message Unsupported
+ERR! errno {}
+verbose exit [ 1, true ]
