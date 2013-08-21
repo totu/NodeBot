@@ -17,7 +17,7 @@ var websites = ['youtube.com', 'riemurasia.net'];
 var mailuser = '';
 var mailpass = '';
 var mailhost = '';
-var devmode = false;
+var devmode = true;
 
 if (devmode) {channel += "2"; botname += "2";}
 
