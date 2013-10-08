@@ -1,18 +1,15 @@
-﻿var	sys = require('util')
-,	irc = require('irc')
-, 	jsdom = require('jsdom')
-,	request = require('request')
-,	url = require('url')
-,	mail = require("emailjs")
-,	grabbedString;
+﻿var	sys = require('util'),
+    irc = require('irc'),
+    jsdom = require('jsdom'),
+    request = require('request'),
+    url = require('url'),
+    command = '',
+    result = '';
 
 var botname = 'KujaBot';
 var channel = '#kujalla';
 var Wolfram_API_key = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var mailuser = '';
-var mailpass = '';
-var mailhost = '';
 var devmode = true;
 
 if (devmode) {channel += "2"; botname += "2";}
@@ -21,109 +18,86 @@ var bot = new irc.Client('irc.quakenet.org', botname, {channels: [channel],});
 console.log('Bot running and connected to ' + channel + '...');
 
 //Bot stuff
+
+function talk(s){
+  bot.say(channel, irc.colors.wrap('cyan', s));
+}
+
+function botmsg(s,m){
+  for (var i=0;i<s.length;i++){
+    if (m.search(new RegExp('!'+s[i], 'i')) != -1) {
+      command = '!'+s[i];
+      return true
+    }
+  }
+  return false
+}
+
 bot.addListener('message', function(from, to, message) {
-	if (message.substring(0,botname.length) == botname) {
-		if (message.search(new RegExp('hi', 'i')) != -1 || message.search(new RegExp('hello', 'i')) != -1) {
-			bot.say(channel, irc.colors.wrap('cyan', 'Hi, ' + from));
-		
-		} else if (message.search(new RegExp('etsi', 'i')) != -1 || message.search(new RegExp('search', 'i')) != -1) {
-			message = message.split(' ').splice(2,message.length);
-			var query = message.join('+');
-			var url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + query;
-			request({uri: url}, function(err, response, body) { 
-				var obj = JSON.parse(body);
-				var rand = Math.floor(Math.random()*4);
-				bot.say(channel, irc.colors.wrap('cyan', obj.responseData.results[rand].url));
-			});
-		}
-		
-		else if (message.search(new RegExp('laske', 'i')) != -1 || message.search(new RegExp('calculate', 'i')) != -1)  {
-			message = message.split(' ').splice(2,message.length);
-			var lauseke = message.join(' ');
-			if (lauseke != '' || lauseke != null) {
-				var merkki = '+';
-				var merkki2 = '%2B';
-				for (var i = 0; i < 2; i++) {
-					if (i == 1) { merkki = '/'; merkki2 = '%2F'; }
-					var intIndexOfMatch = lauseke.indexOf( merkki );
-					while (intIndexOfMatch != -1) {
-						lauseke = lauseke.replace( merkki, merkki2 );
-						intIndexOfMatch = lauseke.indexOf( merkki );
-					}
-				}
-				var wolfurli = "http://api.wolframalpha.com/v2/query?appid=" + Wolfram_API_key + "&format=plaintext&input=" + lauseke; 
-				request({uri: wolfurli}, function(err, response, body){ 
-					var self = this;
-					self.items = new Array();
-					if (err) {
-						wolfvastaus = "Request error! You done goof'd";
-					} else {
-						jsdom.env({
-							html: body,
-							scripts: ['http://code.jquery.com/jquery-latest.min.js']
-						}, function(err, window){
-							var $ = window.jQuery;
-							var wolfvastaus = $('pod:first-child').next().find( $('plaintext') ).html();
-							if (wolfvastaus == null || wolfvastaus == '') bot.say(channel, irc.colors.wrap('cyan', 'Sorry, but that was just too fuck\'d up for me to show you.'));
-							else bot.say(channel, irc.colors.wrap('cyan', wolfvastaus)); 
-						});
-					}
-				});
-			}
-		}
-		
-		else if (message.search(new RegExp('mail', 'i')) != -1) {
-			var text = message.split(' ').splice(4,message.length).join(' ');
-			var to = message.split(' ').splice(2,1);
-			var subject = message.split(' ').splice(3,1);
-			if (message.split(' ').length >= 5) {
-			
-				var server  = mail.server.connect({
-				   user: mailuser, 
-				   password: mailpass, 
-				   host: mailhost, 
-				   ssl: true
-				});
-				
-				server.send({
-					   text: text, 
-					   from: "KujaBot <Kujis@kujalla.com", 
-					   to: "<" + to + ">",
-					   subject: subject
-					}, function(err, message) {
-						if (err) bot.say(channel, irc.colors.wrap('cyan', err));
-						else bot.say(channel, irc.colors.wrap('cyan', 'Sent that for ya\'')); 
-				});
-			} else {
-				bot.say(channel, irc.colors.wrap('cyan', 'You must be new here, proper usage should look something like this: <botname> mail <to> <subject> <text>')); 
-			}
-		}
-		else {
-			bot.say(channel, irc.colors.wrap('cyan', 'I don\'t have a clue what you are trying to do, here are some instructions: <botname> <command> <query>'));
-		}
-	} else {
-		for (var i = 0; i < websites.length; i++) {
-			var re = new RegExp(websites[i], 'i');
-			var search = message.search(re);
-			if (search != -1) {
-				message = "http://www." + message.substring(search);
-				request({uri: message}, function(err, response, body) { 
-					var self = this;
-					self.items = [];
-					if (err) {
-						grabbedString = "Request error! You done goof'd";
-					} else {
-						jsdom.env({ 
-							html: body,
-							scripts: ['http://code.jquery.com/jquery-latest.min.js']
-						}, function(err, window){
-							var $ = window.jQuery
-							grabbedString = $('title').text();
-							bot.say(channel, irc.colors.wrap('cyan', grabbedString));
-						});
-					}
-				});
-			}
-		}
-	}
+  if (botmsg(['hi','hello'], message)) {
+    talk('Hi, ' + from);
+  } else if (botmsg(['search','find','etsi'], message)) {
+    var msg = message.replace(command,'').split(' ');
+    url = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + msg.join('+');
+    request({uri: url}, function(err, res, body) {
+      var obj = JSON.parse(body);
+      talk(obj.responseData.results[0].url);
+    });
+  } else if (botmsg(['math','wolf','calc','calculate','laske'], message)) {
+    var msg = message.replace(command,'').split(' '),
+    q = msg.join(' ');
+    if (q != '' || q != null) {
+      var m = '+',
+      m2 = '%2B';
+      for (var i=0;i<2;i++) {
+        if (i==1) { m='/'; m='%2F'; }
+        var iom = q.indexOf(m);
+        while (iom != -1) {
+          q = q.replace(m, m2);
+          iom = q.indexOf(m);
+        }
+      }
+      var wolframurl = 'http://api.wolframalpha.com/v2/query?appid=' + Wolfram_API_key + '&format=plaintext&input=' + q;
+      request({uri: wolframurl}, function(err, res, body) {
+        if (err) {
+          result = 'Something went wrong.';
+        } else {
+          jsdom.env({
+            html: body,
+            scripts: ['http://code.jquery.com/jquery-latest.min.js'],
+            done: function(err, window) {
+              var $ = window.jQuery,
+              result = $('pod:first-child').next().find($('plaintest')).html();
+              console.log(result);
+              if (result == null || result == '') talk('Sorry, but that was just way too fuck\'d up for me to show here..');
+              else talk(result)
+            }
+          });
+        }
+      });
+    }
+  } else {
+    for (var i=0;i<websites.length;i++) {
+      var reg = new RegExp(websites[i], 'i'), src = message.search(reg);
+      if (src != -1) {
+        var msg = 'http://www.' + message.substring(src);
+        request({uri: msg}, function(err, res, body) {
+          if (err) {
+            result = 'You done goof\'d, son!';
+          } else {
+            jsdom.env({
+              html: body,
+              scripts: ['http://code.jquery.com/jquery-latest.min.js'],
+              done: function(err, window) {
+                var $ = window.jQuery;
+                result = $('title').text();
+              }
+            });
+          }
+          console.log(result);
+          talk(result);
+        });
+      }
+    }
+  }
 });
