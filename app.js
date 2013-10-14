@@ -1,6 +1,6 @@
 ﻿var	sys = require('util'),
     irc = require('irc'),
-    jsdom = require('jsdom'),
+    cheerio = require('cheerio'),
     request = require('request'),
     url = require('url'),
     command = '',
@@ -10,7 +10,7 @@ var botname = 'KujaBot';
 var channel = '#kujalla';
 var Wolfram_API_key = '39KJT4-EUJ8A7U6TA'; //ID for WolframAlpha's API access
 var websites = ['youtube.com', 'riemurasia.net'];
-var devmode = true;
+var devmode = false;
 
 if (devmode) {channel += "2"; botname += "2";}
 
@@ -62,17 +62,10 @@ bot.addListener('message', function(from, to, message) {
         if (err) {
           result = 'Something went wrong.';
         } else {
-          jsdom.env({
-            html: body,
-            scripts: ['http://code.jquery.com/jquery-latest.min.js'],
-            done: function(err, window) {
-              var $ = window.jQuery,
-              result = $('pod:first-child').next().find($('plaintest')).html();
-              console.log(result);
-              if (result == null || result == '') talk('Sorry, but that was just way too fuck\'d up for me to show here..');
-              else talk(result)
-            }
-          });
+          $ = cheerio.load(body);
+          result = $('pod:first-child').next().find($('plaintest')).html();
+          if (result == null || result == '') talk('Sorry, but that was just way too fuck\'d up for me to show here..');
+          else talk(result)
         }
       });
     }
@@ -85,14 +78,16 @@ bot.addListener('message', function(from, to, message) {
           if (err) {
             result = 'You done goof\'d, son!';
           } else {
-            jsdom.env({
+            $ = cheerio.load(body);
+            result = $('title').text();
+            /*jsdom.env({
               html: body,
               scripts: ['http://code.jquery.com/jquery-latest.min.js'],
               done: function(err, window) {
                 var $ = window.jQuery;
                 result = $('title').text();
               }
-            });
+            });*/
           }
           console.log(result);
           talk(result);
