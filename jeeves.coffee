@@ -24,8 +24,9 @@ Jeeves.talk = (str) ->
 
 Jeeves.find = (pic) ->
   req {uri: 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + pic.split(' ').join('+')}, (err, res, body) ->
-    obj = JSON.parse body
-    Jeeves.talk obj.responseData.results[0].url
+    if !err
+      obj = JSON.parse body
+      Jeeves.talk obj.responseData.results[0].url if obj.responseData.results.length > 0
 
 Jeeves.title_please = (vid) ->
   for site in websites
