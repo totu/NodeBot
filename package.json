@@ -1,11 +1,11 @@
 {
-  "name": "node-bot",
+  "name": "Jeeves",
   "dependencies": {
-	"irc": "x",
+	"coffee-script": "x",
+  "irc": "x",
 	"request": "x",
 	"url": "x",
-	"jsdom":"x",
-	"emailjs":"x"
+	"cheerio":"x",
   },
   "engines": {
     "node": "x",
