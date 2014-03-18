@@ -1,40 +1,12 @@
-NodeBot - a Node.js based IRC bot
+Jeeves - a Node.js based IRC bot
 =================================
 
-> NodeBot is IRC bot written with Node.js it uses Node.js' `IRC`, `Request` and `jsdom` modules.
+Whole bunch of lies... Jeeves is under knife for now current master *should* be in working order.
 
-Project spawned from my and my college buddies need for bot to handle simple stuff
-on our IRC channel.
-
----------------------------------
-
-
-##Installation & configuration:
-
-1. You need node.js (http://nodejs.org).  For node.js installation instructions prefer to their own documentation.
-
-   
-2. JSDOM requires Python 2.7 (NOT 3.2). So install Python (http://python.org).
- 
- 
-3. Run npm install.
-`npm install`
-
-	
-4. Configure bot's basic information:
-	- From `app.js` change server, channel and bot's nick to what you want.
-	- From `\node_modules\irc\lib\irc.js` you can change username, port and all the rest.
-	- Add your operators names in `ops.bot` file (you need at least one name here to use `addop` command)
-
-	
-5. Start the program.
-`node app.js`
-
----------------------------------
-##Commands
-Commands include, but may not be limited to:
-Hello, search, wiki, calculate & mail
-
+##Installation
+1. run install [https://github.com/joyent/node](node.js) & npm
+2. run 'npm install'
+3. run 'jeeves.coffee'
 
 ---------------------------------
 
