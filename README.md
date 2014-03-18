@@ -4,7 +4,7 @@ Jeeves - a Node.js based IRC bot
 Whole bunch of lies... Jeeves is under knife for now current master *should* be in working order.
 
 ##Installation
-1. run install [https://github.com/joyent/node](node.js) & npm
+1. run install [node.js](https://github.com/joyent/node) & npm
 2. run 'npm install'
 3. run 'jeeves.coffee'
 
@@ -13,10 +13,7 @@ Whole bunch of lies... Jeeves is under knife for now current master *should* be 
 ##That other section...
 
 Need to submit bugs? Feature requests? Just want to comment?
-topi.tuulensuu@student.hamk.fi
-
-You can also keep tabs on me through my website:
-http://robots-and-dinosaurs.org/
+topi.tuulensuu@gmail.com
 
 Copyright (c) Topi Tuulensuu 2012
 
