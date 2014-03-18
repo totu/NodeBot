@@ -1,14 +1,17 @@
 {
   "name": "Jeeves",
+  "version": "1.0.0",
+  "author": "github.com/totu",
+  "description": "IRC bot build with node and coffee-script",
   "dependencies": {
-	"coffee-script": "x",
-  "irc": "x",
-	"request": "x",
-	"url": "x",
-	"cheerio":"x",
+    "coffee-script": "*",
+    "irc": "*",
+    "request": "*",
+    "url": "*",
+    "cheerio":"*"
   },
   "engines": {
-    "node": "x",
-    "npm": "x"
+    "node": "*",
+    "npm": "*"
   }
 }
