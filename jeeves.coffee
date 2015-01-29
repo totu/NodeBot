@@ -2,8 +2,11 @@ irc = require 'irc'
 sys = require 'util'
 req = require 'request'
 cheerio = require 'cheerio'
+wolfclient = require 'node-wolfram'
+wolfram = new wolfclient '39KJT4-G79L2V2RP5'
+weather = require 'weather-js'
 
-name = 'KujaBot'
+name = 'Kujis'
 channel = '#kujalla'
 websites = ['www.youtube.com', 'www.riemurasia.net', 'www.reddit.com', 'news.ycombinator.com']
 cmd = null
@@ -40,7 +43,29 @@ Jeeves.title_please = (vid) ->
           console.log $('title').text()
           Jeeves.talk $('title').text()
 
+Jeeves.calc = (query) ->
+  wolfram.query query, (err, result) ->
+    if(err)
+      console.log err
+    else
+      for subpod in result.queryresult.pod[1].subpod
+        for text in subpod.plaintext
+          Jeeves.talk text
+
+Jeeves.weather = (locale) ->
+  weather.find {search: locale, degreeType: 'C'}, (err, result) ->
+    if err
+      console.log err
+    else
+      data = result[0]
+      if data.current.feelslike
+        Jeeves.talk "Weather at location " + data.location.name + ": " + data.current.temperature + "C (feels like " + data.current.feelslike + "C). Observed at " + data.current.observationtime + ". Forecast: " + data.forecast[1].day + " " + data.forecast[1].low + " - " + data.forecast[1].high + " " + data.forecast[1].skytextday
+      else
+        Jeeves.talk "Weather at location " + data.location.name + ": " + data.current.temperature + "C. Observed at " + data.current.observationtime + ". Forecast: " + data.forecast[1].day + " " + data.forecast[1].low + " - " + data.forecast[1].high + " " + data.forecast[1].skytextday
+
 Jeeves.addListener 'message', (from, to, msg) ->
   Jeeves.talk sys.format 'Hello, %s, my good chum', from if Jeeves.get 'hi hello', msg
   Jeeves.find msg.replace cmd, '' if Jeeves.get 'search find etsi kuva picture pic image img', msg
   Jeeves.title_please msg
+  Jeeves.calc msg.replace cmd, '' if Jeeves.get 'calc laske wolf wolfram', msg
+  Jeeves.weather msg.replace cmd, '' if Jeeves.get 'sää weather', msg
